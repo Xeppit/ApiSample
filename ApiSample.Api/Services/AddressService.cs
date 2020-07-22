@@ -70,7 +70,8 @@ namespace ApiSample.Api.Services
                 Line2 = addressPostRequest.Line2,
                 Line3 = addressPostRequest.Line3,
                 Line4 = addressPostRequest.Line4,
-                Postcode = addressPostRequest.Postcode
+                Postcode = addressPostRequest.Postcode,
+                Created = DateTime.Now
             };
 
             try
@@ -94,7 +95,8 @@ namespace ApiSample.Api.Services
                 Line2 = addressPostRequest.Line2,
                 Line3 = addressPostRequest.Line3,
                 Line4 = addressPostRequest.Line4,
-                Postcode = addressPostRequest.Postcode
+                Postcode = addressPostRequest.Postcode,
+                Modified = DateTime.Now
             };
 
             try
