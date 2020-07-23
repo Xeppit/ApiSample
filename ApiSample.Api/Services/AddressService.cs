@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiSample.Api.Models;
+using ApiSample.Api.Extensions;
 using ApiSample.Api.Repositories;
 using ApiSample.Api.Requests;
 using ApiSample.Api.Responses;
-using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace ApiSample.Api.Services
 {
@@ -22,57 +22,22 @@ namespace ApiSample.Api.Services
         public async Task<List<AddressGetResponse>> GetAllAsync()
         {
             var getAllResult = await _addressRepository.GetAllAsync();
-            var getAllResponse = new List<AddressGetResponse>();
 
-            foreach (var addressModel in getAllResult)
-            {
-                var newResponse = new AddressGetResponse
-                {
-                    Id = addressModel.Id,
-                    Line1 = addressModel.Line1,
-                    Line2 = addressModel.Line2,
-                    Line3 = addressModel.Line3,
-                    Line4 = addressModel.Line4,
-                    Postcode = addressModel.Postcode
-                };
-
-                getAllResponse.Add(newResponse);
-            }
-
-            return getAllResponse;
+            return getAllResult.Select(addressModel => addressModel?.ToAddressGetResponse()).ToList();
         }
 
         public async Task<AddressGetResponse> GetByIdAsync(string id)
         {
-            var getAllResult = await _addressRepository.FindOneAsync(x => x.Id == id);
+            var getByIdResult = await _addressRepository.FindOneAsync(x => x.Id == id);
 
-            if (getAllResult == null)
-                return default;
-
-            var newResponse = new AddressGetResponse
-            {
-                Id = getAllResult.Id,
-                Line1 = getAllResult.Line1,
-                Line2 = getAllResult.Line2,
-                Line3 = getAllResult.Line3,
-                Line4 = getAllResult.Line4,
-                Postcode = getAllResult.Postcode
-            };
+            var newResponse = getByIdResult?.ToAddressGetResponse();
 
             return newResponse;
         }
 
         public async Task<bool> PostAsync(AddressPostRequest addressPostRequest)
         {
-            var addressModel = new AddressModel()
-            {
-                Line1 = addressPostRequest.Line1,
-                Line2 = addressPostRequest.Line2,
-                Line3 = addressPostRequest.Line3,
-                Line4 = addressPostRequest.Line4,
-                Postcode = addressPostRequest.Postcode,
-                Created = DateTime.Now
-            };
+            var addressModel = addressPostRequest.ToAddressModel();
 
             try
             {
@@ -88,41 +53,39 @@ namespace ApiSample.Api.Services
 
         public async Task<bool> PutAsync(string id,AddressPutRequest addressPostRequest)
         {
-            var addressModel = new AddressModel()
-            {
-                Id = addressPostRequest.Id,
-                Line1 = addressPostRequest.Line1,
-                Line2 = addressPostRequest.Line2,
-                Line3 = addressPostRequest.Line3,
-                Line4 = addressPostRequest.Line4,
-                Postcode = addressPostRequest.Postcode,
-                Modified = DateTime.Now
-            };
+            var addressModel = addressPostRequest.ToAddressModel();
+
+            ReplaceOneResult result;
 
             try
             {
-                await _addressRepository.UpdateAsync(id, addressModel);
+                result = await _addressRepository.UpdateAsync(id, addressModel);
             }
             catch (Exception)
             {
                 return false;
             }
 
-            return true;
+            if (!result.IsAcknowledged) return false;
+
+            return result.ModifiedCount == 1;
         }
 
         public async Task<bool> Delete(string id)
         {
+            DeleteResult result;
             try
             {
-                await _addressRepository.DeleteAsync(x => x.Id == id);
+                result = await _addressRepository.DeleteAsync(x => x.Id == id);
             }
             catch (Exception)
             {
                 return false;
             }
 
-            return true;
+            if (!result.IsAcknowledged) return false;
+
+            return result.DeletedCount == 1;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ApiSample.Api.Models;
@@ -34,14 +33,14 @@ namespace ApiSample.Api.Repositories
             await _collection.InsertManyAsync(input);
         }
 
-        public virtual async Task UpdateAsync(string id, T input)
+        public virtual async Task<ReplaceOneResult> UpdateAsync(string id, T input)
         {
-            await _collection.ReplaceOneAsync(x => x.Id == id, input);
+            return await _collection.ReplaceOneAsync(x => x.Id == id, input);
         }
 
-        public virtual async Task UpdateManyAsync(Expression<Func<T, bool>> predicate, UpdateDefinition<T> definition, bool isUpsert)
+        public virtual async Task<UpdateResult> UpdateManyAsync(Expression<Func<T, bool>> predicate, UpdateDefinition<T> definition, bool isUpsert)
         {
-            await _collection.UpdateManyAsync(predicate, definition, new UpdateOptions { IsUpsert = isUpsert });
+            return await _collection.UpdateManyAsync(predicate, definition, new UpdateOptions { IsUpsert = isUpsert });
         }
 
         public virtual async Task<List<T>> GetAllAsync()
