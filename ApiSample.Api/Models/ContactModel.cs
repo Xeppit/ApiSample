@@ -15,7 +15,7 @@ namespace ApiSample.Api.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string CompanyId { get; set; }
+        public string Company { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
     }

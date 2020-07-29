@@ -7,7 +7,7 @@ namespace ApiSample.Api.Extensions
 {
     public static class ContactMapperExtensions
     {
-        public static ContactGetResponse ToContactGetResponse(this ContactModel contactModel, CompanyGetResponse companyGetResponse)
+        public static ContactGetResponse ToContactGetResponse(this ContactModel contactModel)
         {
             return new ContactGetResponse
             {
@@ -16,7 +16,7 @@ namespace ApiSample.Api.Extensions
                 LastName = contactModel.LastName,
                 Email = contactModel.Email,
                 PhoneNumber = contactModel.PhoneNumber,
-                Company = companyGetResponse
+                Company = contactModel.Company
             };
         }
 
@@ -28,7 +28,7 @@ namespace ApiSample.Api.Extensions
                 LastName = contactModel.LastName,
                 Email = contactModel.Email,
                 PhoneNumber = contactModel.PhoneNumber,
-                CompanyId = contactModel.CompanyId,
+                Company = contactModel.Company,
                 Created = DateTime.Now
             };
         }
@@ -42,7 +42,7 @@ namespace ApiSample.Api.Extensions
                 LastName = contactModel.LastName,
                 Email = contactModel.Email,
                 PhoneNumber = contactModel.PhoneNumber,
-                CompanyId = contactModel.CompanyId,
+                Company = contactModel.Company,
                 Modified = DateTime.Now
             };
         }
