@@ -18,9 +18,13 @@ namespace ApiSample.Api
 
             var database = client.GetDatabase("TestApi");
 
-            var locationCollection = database.GetCollection<AddressModel>("Addresses");
+            var addressCollection = database.GetCollection<AddressModel>("Addresses");
+            var companyCollection = database.GetCollection<CompanyModel>("Companies");
+            var contactCollection = database.GetCollection<ContactModel>("Contacts");
 
-            services.AddScoped(provider => locationCollection);
+            services.AddScoped(provider => addressCollection);
+            services.AddScoped(provider => companyCollection);
+            services.AddScoped(provider => contactCollection);
         }
     }
 }

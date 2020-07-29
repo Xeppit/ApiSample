@@ -10,7 +10,7 @@ using MongoDB.Driver;
 
 namespace ApiSample.Api.Services
 {
-    public class AddressService
+    public class AddressService : IService<AddressGetResponse, AddressPostRequest, AddressPutRequest>
     {
         private readonly AddressRepository _addressRepository;
 
@@ -35,9 +35,9 @@ namespace ApiSample.Api.Services
             return newResponse;
         }
 
-        public async Task<bool> PostAsync(AddressPostRequest addressPostRequest)
+        public async Task<bool> PostAsync(AddressPostRequest postRequest)
         {
-            var addressModel = addressPostRequest.ToAddressModel();
+            var addressModel = postRequest.ToAddressModel();
 
             try
             {
@@ -51,9 +51,9 @@ namespace ApiSample.Api.Services
             return true;
         }
 
-        public async Task<bool> PutAsync(string id,AddressPutRequest addressPostRequest)
+        public async Task<bool> PutAsync(string id,AddressPutRequest putRequest)
         {
-            var addressModel = addressPostRequest.ToAddressModel();
+            var addressModel = putRequest.ToAddressModel();
 
             ReplaceOneResult result;
 
